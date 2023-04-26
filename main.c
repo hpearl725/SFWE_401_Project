@@ -279,6 +279,13 @@ struct card *genNewCard(char suit, int value, struct card *prev, struct card *ne
 {
     struct card *newCard = (struct card *)malloc(sizeof(struct card) * 104);
     // for head card
+
+    if (newCard == NULL)
+    {
+        printf("Error: Failed to generate new card.\n");
+        exit(EXIT_FAILURE);
+    }
+
     if (prev == NULL && next == NULL)
     {
         newCard->suit = suit;
