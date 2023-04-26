@@ -254,6 +254,9 @@ card *ReadFile(char fnam[100])
 {
     FILE *inp;
     struct card *temp = (struct card *)malloc(sizeof(struct card) * 104);
+    if(temp == NULL){
+	exit(1); // exit with error
+    }
     temp->prev = NULL;
     temp->next = NULL;
     inp = fopen(fnam, "r");
