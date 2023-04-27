@@ -271,6 +271,7 @@ card *ReadFile(char fnam[100])
             tail = TailCard(temp->suit, temp->value, temp->prev, temp->next);
         }
     }
+    free(temp);
     return head;
 }
 
