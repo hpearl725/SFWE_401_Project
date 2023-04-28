@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <windows.h>
+#include <wincrypt.h>
 
 // programmed by Harrison Pearl and Logan Coddington
 
@@ -325,20 +327,35 @@ card *TailCard(char suit, int value, struct card *prev, struct card *next)
 
 void ShuffleDeck(card *HeadNode)
 {
-
-    srand(time(NULL));
-
     for (int i = 0; i < 1000; i++)
     {
 
-        int R1 = rand() % 103;
-        int R2 = rand() % 103;
+        int R1 = secRandFunc() % 103;
+        int R2 = secRandFunc() % 103;
         if (R2 < R1)
         {
             SwapCards(&HeadNode, R1, R2);
         }
     }
 }
+
+int secRandFunc(){
+    HCRYPTPROV hCryptProv;
+    unsigned char buffer[16]; // generate 16 random bytes
+    if (!CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+        // handle error
+        exit(1);
+    }
+    if (!CryptGenRandom(hCryptProv, sizeof(buffer), buffer)) {
+        // handle error
+        exit(1);
+    }
+    CryptReleaseContext(hCryptProv, 0);
+    return (int)buffer[0];
+}
+
+
+
 
 void SwapCards(card **HeadNode, int R1, int R2)
 {
