@@ -72,7 +72,9 @@ int main()
     {
 
         printf("enter the name of file containing the deck of cards:\n");
-        scanf(" %s", fnam);
+
+        fgets(fnam, 100, stdin);
+        fnam[strnlen(fnam, 100) - 1] = '\0';
 
         head = (card *)malloc(sizeof(card));
         tail = (card *)malloc(sizeof(card));
