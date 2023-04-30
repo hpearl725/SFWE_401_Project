@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <stdbool.h>
 
 // programmed by Harrison Pearl and Logan Coddington
 
@@ -76,6 +77,15 @@ int main()
         fgets(fnam, 100, stdin);
         fnam[strnlen(fnam, 100) - 1] = '\0';
 
+        if (isValidPath(fnam))
+        {
+            ReadFile(fnam);
+        }
+        else
+        {
+            exit(EXIT_FAILURE);
+        }
+
         head = (card *)malloc(sizeof(card));
         tail = (card *)malloc(sizeof(card));
 
@@ -104,7 +114,6 @@ int main()
 
         if (game_type == 'p' || game_type == 'P')
         {
-
             ShuffleDeck(head);
 
             int i = 0;
@@ -259,6 +268,11 @@ card *ReadFile(char fnam[100])
     temp->prev = NULL;
     temp->next = NULL;
     inp = fopen(fnam, "r");
+    if (inp == NULL)
+    {
+        printf("Deck file not found\n");
+        exit(EXIT_FAILURE);
+    }
 
     while (fscanf(inp, "%d", &temp->value) != EOF)
     {
@@ -275,7 +289,30 @@ card *ReadFile(char fnam[100])
     }
     return head;
 }
-
+bool isValidPath(char *fname)
+{
+    if (strstr(fname, ".txt") == NULL)
+    {
+        printf("Invalid file type, deck must be .txt\n");
+        return false;
+    }
+    if (strstr(fname, "..") != NULL)
+    {
+        printf("Invalid path, deck must be in current directory\n");
+        return false;
+    }
+    char c = *fname;
+    while (c != '\0')
+    {
+        if (c == '/' || c == '\\' || c == ':' || c == '*' || c == '?' || c == '"' || c == '<' || c == '>' || c == '|')
+        {
+            printf("Invalid character in path: %c\n", c);
+            return false;
+        }
+        c = *fname++;
+    }
+    return true;
+}
 // makes a new card
 struct card *genNewCard(char suit, int value, struct card *prev, struct card *next)
 {
